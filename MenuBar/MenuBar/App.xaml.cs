@@ -57,6 +57,7 @@ namespace MenuBar
             containerRegistry.Register<IPersistAndRestoreService, PersistAndRestoreService>();
             containerRegistry.Register<IThemeSelectorService, ThemeSelectorService>();
             containerRegistry.Register<ISampleDataService, SampleDataService>();
+            containerRegistry.RegisterSingleton<IRightPaneService, RightPaneService>();
 
             // Views
             containerRegistry.RegisterForNavigation<ShellWindow>();

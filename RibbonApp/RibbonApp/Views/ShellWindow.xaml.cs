@@ -7,6 +7,7 @@ using MahApps.Metro.Controls;
 using Prism.Regions;
 
 using RibbonApp.Constants;
+using RibbonApp.Contracts.Services;
 
 namespace RibbonApp.Views
 {
@@ -14,22 +15,14 @@ namespace RibbonApp.Views
     {
         private RibbonTitleBar _titleBar;
 
-        public ShellWindow(IRegionManager regionManager)
+        public ShellWindow(IRegionManager regionManager, IRightPaneService rightPaneService)
         {
             InitializeComponent();
             RegionManager.SetRegionName(menuContentControl, Regions.Main);
             RegionManager.SetRegionManager(menuContentControl, regionManager);
-            RegionManager.SetRegionName(rightPaneContentControl, Regions.RightPane);
-            RegionManager.SetRegionManager(rightPaneContentControl, regionManager);
-            var rightPanenavigationService = regionManager.Regions[Regions.RightPane].NavigationService;
-            rightPanenavigationService.Navigated += OnRightPaneNavigated;
+            rightPaneService.Initialize(splitView, rightPaneContentControl);
             navigationBehavior.Initialize(regionManager);
             tabsBehavior.Initialize(regionManager);
-        }
-
-        private void OnRightPaneNavigated(object sender, RegionNavigationEventArgs e)
-        {
-            splitView.IsPaneOpen = true;
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)

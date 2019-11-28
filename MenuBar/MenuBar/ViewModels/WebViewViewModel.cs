@@ -2,6 +2,10 @@
 using System.Windows;
 using System.Windows.Input;
 
+using MahApps.Metro.Controls;
+
+using MenuBar.Contracts.Services;
+
 using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
 using Microsoft.Toolkit.Wpf.UI.Controls;
 
@@ -25,6 +29,8 @@ namespace MenuBar.ViewModels
         private DelegateCommand _browserForwardCommand;
         private ICommand _openInBrowserCommand;
         private WebView _webView;
+        private readonly IRightPaneService _rightPaneService;
+
 
         public string Source
         {
@@ -72,14 +78,17 @@ namespace MenuBar.ViewModels
 
         public ICommand OpenInBrowserCommand => _openInBrowserCommand ?? (_openInBrowserCommand = new DelegateCommand(OnOpenInBrowser));
 
-        public WebViewViewModel()
+        public WebViewViewModel(IRightPaneService rightPaneService)
         {
             Source = DefaultUrl;
+            _rightPaneService = rightPaneService;
         }
 
         public void Initialize(WebView webView)
         {
             _webView = webView;
+            _rightPaneService.PaneOpened += OnRightPaneOpened;
+            _rightPaneService.PaneClosed += OnRightPaneClosed;
         }
 
         public void OnNavigationCompleted(WebViewControlNavigationCompletedEventArgs e)
@@ -112,5 +121,18 @@ namespace MenuBar.ViewModels
             };
             Process.Start(psi);
         }
+
+        private void OnRightPaneOpened(object sender, System.EventArgs e)
+        {
+            // WebView control is always rendered on top
+            // We need to adapt the WebView to be able to show the right pane
+            if (sender is SplitView splitView)
+            {
+                _webView.Margin = new Thickness(0, 0, splitView.OpenPaneLength, 0);
+            }
+        }
+
+        private void OnRightPaneClosed(object sender, System.EventArgs e)
+         => _webView.Margin = new Thickness(0);
     }
 }
