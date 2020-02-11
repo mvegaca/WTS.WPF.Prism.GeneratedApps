@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -33,25 +34,33 @@ namespace NavigationPane
         protected override Window CreateShell()
             => Container.Resolve<ShellWindow>();
 
-        public override void Initialize()
+        protected async override void InitializeShell(Window shell)
         {
-            base.Initialize();
+            base.InitializeShell(shell);
             var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
             persistAndRestoreService.RestoreData();
+            await Task.CompletedTask;
             var themeSelectorService = Container.Resolve<IThemeSelectorService>();
             themeSelectorService.SetTheme();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        public async override void Initialize()
+        {
+            base.Initialize();
+            await Task.CompletedTask;
+        }
+
+        protected async override void OnStartup(StartupEventArgs e)
         {
             _startUpArgs = e.Args;
             base.OnStartup(e);
+            await Task.CompletedTask;
         }
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        protected async override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Core Services
-            containerRegistry.Register<IFilesService, FilesService>();
+            containerRegistry.Register<IFileService, FileService>();
 
             // App Services
             containerRegistry.Register<IPersistAndRestoreService, PersistAndRestoreService>();
@@ -59,15 +68,11 @@ namespace NavigationPane
             containerRegistry.Register<ISampleDataService, SampleDataService>();
 
             // Views
-            containerRegistry.RegisterForNavigation<ShellWindow>();
-
-            containerRegistry.RegisterForNavigation<MainPage>(PageKeys.Main);
-
-            containerRegistry.RegisterForNavigation<MasterDetailPage>(PageKeys.MasterDetail);
-
-            containerRegistry.RegisterForNavigation<WebViewPage>(PageKeys.WebView);
-
             containerRegistry.RegisterForNavigation<SettingsPage>(PageKeys.Settings);
+            containerRegistry.RegisterForNavigation<WebViewPage>(PageKeys.WebView);
+            containerRegistry.RegisterForNavigation<MasterDetailPage>(PageKeys.MasterDetail);
+            containerRegistry.RegisterForNavigation<MainPage>(PageKeys.Main);
+            containerRegistry.RegisterForNavigation<ShellWindow>();
 
             // Configuration
             var configuration = BuildConfiguration();
@@ -78,6 +83,8 @@ namespace NavigationPane
             // Register configurations to IoC
             containerRegistry.RegisterInstance<IConfiguration>(configuration);
             containerRegistry.RegisterInstance<AppConfig>(appConfig);
+
+            await Task.CompletedTask;
         }
 
         private IConfiguration BuildConfiguration()
@@ -104,8 +111,9 @@ namespace NavigationPane
             ViewModelLocationProvider.Register(typeof(ShellWindow).FullName, typeof(ShellViewModel));
         }
 
-        private void OnExit(object sender, ExitEventArgs e)
+        private async void OnExit(object sender, ExitEventArgs e)
         {
+            await Task.CompletedTask;
             var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
             persistAndRestoreService.PersistData();
         }
