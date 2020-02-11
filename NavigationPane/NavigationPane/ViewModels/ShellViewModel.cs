@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
 using MahApps.Metro.Controls;
 
 using NavigationPane.Constants;
-using NavigationPane.Models;
 using NavigationPane.Strings;
 
 using Prism.Commands;
@@ -22,6 +22,7 @@ namespace NavigationPane.ViewModels
         private HamburgerMenuItem _selectedOptionsMenuItem;
         private DelegateCommand _goBackCommand;
         private ICommand _loadedCommand;
+        private ICommand _unloadedCommand;
         private ICommand _menuItemInvokedCommand;
         private ICommand _optionsMenuItemInvokedCommand;
 
@@ -54,6 +55,8 @@ namespace NavigationPane.ViewModels
 
         public ICommand LoadedCommand => _loadedCommand ?? (_loadedCommand = new DelegateCommand(OnLoaded));
 
+        public ICommand UnloadedCommand => _unloadedCommand ?? (_unloadedCommand = new DelegateCommand(OnUnloaded));
+
         public ICommand MenuItemInvokedCommand => _menuItemInvokedCommand ?? (_menuItemInvokedCommand = new DelegateCommand(OnMenuItemInvoked));
 
         public ICommand OptionsMenuItemInvokedCommand => _optionsMenuItemInvokedCommand ?? (_optionsMenuItemInvokedCommand = new DelegateCommand(OnOptionsMenuItemInvoked));
@@ -70,6 +73,11 @@ namespace NavigationPane.ViewModels
             SelectedMenuItem = MenuItems.First();
         }
 
+        private void OnUnloaded()
+        {
+            _navigationService.Navigated -= OnNavigated;
+        }
+
         private bool CanGoBack()
             => _navigationService != null && _navigationService.Journal.CanGoBack;
 
@@ -77,7 +85,10 @@ namespace NavigationPane.ViewModels
             => _navigationService.Journal.GoBack();
 
         private void OnMenuItemInvoked()
-            => RequestNavigate(SelectedMenuItem.Tag.ToString());
+            => RequestNavigate(SelectedMenuItem.Tag?.ToString());
+
+        private void OnOptionsMenuItemInvoked()
+            => RequestNavigate(SelectedOptionsMenuItem.Tag?.ToString());
 
         private void RequestNavigate(string target)
         {
@@ -87,14 +98,11 @@ namespace NavigationPane.ViewModels
             }
         }
 
-        private void OnOptionsMenuItemInvoked()
-            => RequestNavigate(SelectedOptionsMenuItem.Tag.ToString());
-
         private void OnNavigated(object sender, RegionNavigationEventArgs e)
         {
             var item = MenuItems
                         .OfType<HamburgerMenuItem>()
-                        .FirstOrDefault(i => e.Uri.ToString() == i.Tag.ToString());
+                        .FirstOrDefault(i => e.Uri.ToString() == i.Tag?.ToString());
             if (item != null)
             {
                 SelectedMenuItem = item;
@@ -103,7 +111,7 @@ namespace NavigationPane.ViewModels
             {
                 SelectedOptionsMenuItem = OptionMenuItems
                         .OfType<HamburgerMenuItem>()
-                        .FirstOrDefault(i => e.Uri.ToString() == i.Tag.ToString());
+                        .FirstOrDefault(i => e.Uri.ToString() == i.Tag?.ToString());
             }
 
             GoBackCommand.RaiseCanExecuteChanged();

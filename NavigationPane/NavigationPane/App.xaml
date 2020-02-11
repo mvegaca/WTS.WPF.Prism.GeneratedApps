@@ -6,7 +6,7 @@
     Exit="OnExit"
     DispatcherUnhandledException="OnDispatcherUnhandledException">
 
-    <prism:PrismApplication.Resources>
+    <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
@@ -22,5 +22,5 @@
                 <ResourceDictionary Source="/Styles/Button.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </prism:PrismApplication.Resources>
+    </Application.Resources>
 </prism:PrismApplication>

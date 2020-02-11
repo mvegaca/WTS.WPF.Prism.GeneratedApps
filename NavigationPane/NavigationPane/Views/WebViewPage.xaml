@@ -11,6 +11,12 @@
     Background="{DynamicResource MahApps.Brushes.Control.Background}"
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding RefreshCommand}" />
+        <KeyBinding Modifiers="Alt" Key="Left" Command="{Binding BrowserBackCommand}" />
+        <KeyBinding Modifiers="Alt" Key="Right" Command="{Binding BrowserForwardCommand}" />
+        <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding OpenInBrowserCommand}" />
+    </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

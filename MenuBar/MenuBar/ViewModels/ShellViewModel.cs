@@ -11,27 +11,23 @@ using Prism.Regions;
 
 namespace MenuBar.ViewModels
 {
-    public class ShellViewModel : BindableBase, IDisposable
+    public class ShellViewModel : BindableBase
     {
-        private readonly IRegionManager _regionManager;
         private readonly IRightPaneService _rightPaneService;
+        private readonly IRegionManager _regionManager;
         private IRegionNavigationService _navigationService;
         private DelegateCommand _goBackCommand;
         private ICommand _menuFileSettingsCommand;
-
         private ICommand _menuViewsWebViewCommand;
-
         private ICommand _menuViewsMasterDetailCommand;
-
         private ICommand _menuViewsMainCommand;
-
         private ICommand _loadedCommand;
+        private ICommand _unloadedCommand;
         private ICommand _menuFileExitCommand;
 
         public DelegateCommand GoBackCommand => _goBackCommand ?? (_goBackCommand = new DelegateCommand(OnGoBack, CanGoBack));
 
         public ICommand MenuFileSettingsCommand => _menuFileSettingsCommand ?? (_menuFileSettingsCommand = new DelegateCommand(OnMenuFileSettings));
-
 
         public ICommand MenuViewsWebViewCommand => _menuViewsWebViewCommand ?? (_menuViewsWebViewCommand = new DelegateCommand(OnMenuViewsWebView));
 
@@ -40,6 +36,8 @@ namespace MenuBar.ViewModels
         public ICommand MenuViewsMainCommand => _menuViewsMainCommand ?? (_menuViewsMainCommand = new DelegateCommand(OnMenuViewsMain));
 
         public ICommand LoadedCommand => _loadedCommand ?? (_loadedCommand = new DelegateCommand(OnLoaded));
+
+        public ICommand UnloadedCommand => _unloadedCommand ?? (_unloadedCommand = new DelegateCommand(OnUnloaded));
 
         public ICommand MenuFileExitCommand => _menuFileExitCommand ?? (_menuFileExitCommand = new DelegateCommand(OnMenuFileExit));
 
@@ -55,7 +53,7 @@ namespace MenuBar.ViewModels
             _navigationService.Navigated += OnNavigated;
         }
 
-        public void Dispose()
+        private void OnUnloaded()
         {
             _navigationService.Navigated -= OnNavigated;
         }

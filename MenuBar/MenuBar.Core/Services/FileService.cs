@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Text;
 
+using MenuBar.Core.Contracts.Services;
+
 using Newtonsoft.Json;
 
-using RibbonApp.Core.Contracts.Services;
-
-namespace RibbonApp.Core.Services
+namespace MenuBar.Core.Services
 {
-    public class FilesService : IFilesService
+    public class FileService : IFileService
     {
         public T Read<T>(string folderPath, string fileName)
         {
