@@ -11,13 +11,15 @@ using Microsoft.Toolkit.Wpf.UI.Controls;
 
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 
 namespace MenuBar.ViewModels
 {
-    public class WebViewViewModel : BindableBase
+    public class WebViewViewModel : BindableBase, INavigationAware
     {
         // TODO WTS: Set the URI of the page to show by default
         private const string DefaultUrl = "https://docs.microsoft.com/windows/apps/";
+        private readonly IRightPaneService _rightPaneService;
 
         private string _source;
         private bool _isLoading = true;
@@ -29,8 +31,6 @@ namespace MenuBar.ViewModels
         private DelegateCommand _browserForwardCommand;
         private ICommand _openInBrowserCommand;
         private WebView _webView;
-        private readonly IRightPaneService _rightPaneService;
-
 
         public string Source
         {
@@ -87,8 +87,6 @@ namespace MenuBar.ViewModels
         public void Initialize(WebView webView)
         {
             _webView = webView;
-            _rightPaneService.PaneOpened += OnRightPaneOpened;
-            _rightPaneService.PaneClosed += OnRightPaneClosed;
         }
 
         public void OnNavigationCompleted(WebViewControlNavigationCompletedEventArgs e)
@@ -120,6 +118,23 @@ namespace MenuBar.ViewModels
                 UseShellExecute = true
             };
             Process.Start(psi);
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            _rightPaneService.PaneOpened += OnRightPaneOpened;
+            _rightPaneService.PaneClosed += OnRightPaneClosed;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            _rightPaneService.PaneOpened -= OnRightPaneOpened;
+            _rightPaneService.PaneClosed -= OnRightPaneClosed;
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
         }
 
         private void OnRightPaneOpened(object sender, System.EventArgs e)
