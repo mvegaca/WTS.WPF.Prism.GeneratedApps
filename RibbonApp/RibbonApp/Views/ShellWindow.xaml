@@ -13,6 +13,7 @@
     xmlns:Fluent="urn:fluent-ribbon"
     ShowSystemMenuOnRightClick="False"
     Loaded="MetroWindow_Loaded"
+    Unloaded="MetroWindow_Unloaded"
     Style="{StaticResource CustomMetroWindow}"
     mc:Ignorable="d"
     Title="{x:Static strings:Resources.AppDisplayName}">
@@ -39,7 +40,7 @@
                 <!--Backstage-->
                 <Fluent:Ribbon.Menu>
                     <Fluent:Backstage UseHighestAvailableAdornerLayer="False">
-                        <Fluent:BackstageTabControl x:Name="backstageTabControl">
+                        <Fluent:BackstageTabControl x:Name="backstageTabControl" SelectedContentMargin="0">
                             <i:Interaction.Behaviors>
                                 <behaviors:BackstageTabNavigationBehavior x:Name="navigationBehavior" />
                             </i:Interaction.Behaviors>
@@ -57,6 +58,7 @@
                 <!--Tabs-->
                 <Fluent:RibbonTabItem
                     Fluent:KeyTip="A"
+                    behaviors:RibbonTabsBehavior.IsHomeTab="True"
                     Header="{x:Static strings:Resources.ShellPageRibbonTabHomeHeader}">
                     <Fluent:RibbonGroupBox
                         State="Large"
@@ -74,7 +76,8 @@
                 Grid.Row="1"
                 x:Name="splitView"
                 PanePlacement="Right"
-                OpenPaneLength="400">
+                OpenPaneLength="400"
+                Focusable="False">
                 <controls:SplitView.Pane>
                     <Border
                         BorderThickness="1,1,0,0"

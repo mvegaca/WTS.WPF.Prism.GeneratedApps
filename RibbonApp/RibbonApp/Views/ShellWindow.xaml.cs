@@ -11,9 +11,17 @@ using RibbonApp.Contracts.Services;
 
 namespace RibbonApp.Views
 {
-    public partial class ShellWindow : MetroWindow
+    public partial class ShellWindow : MetroWindow, IRibbonWindow
     {
-        private RibbonTitleBar _titleBar;
+        public RibbonTitleBar TitleBar
+        {
+            get => (RibbonTitleBar)GetValue(TitleBarProperty);
+            private set => SetValue(TitleBarPropertyKey, value);
+        }
+
+        private static readonly DependencyPropertyKey TitleBarPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TitleBar), typeof(RibbonTitleBar), typeof(ShellWindow), new PropertyMetadata());
+
+        public static readonly DependencyProperty TitleBarProperty = TitleBarPropertyKey.DependencyProperty;
 
         public ShellWindow(IRegionManager regionManager, IRightPaneService rightPaneService)
         {
@@ -28,9 +36,14 @@ namespace RibbonApp.Views
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             var window = sender as MetroWindow;
-            _titleBar = window.FindChild<RibbonTitleBar>("RibbonTitleBar");
-            _titleBar.InvalidateArrange();
-            _titleBar.UpdateLayout();
+            TitleBar = window.FindChild<RibbonTitleBar>("RibbonTitleBar");
+            TitleBar.InvalidateArrange();
+            TitleBar.UpdateLayout();
+        }
+
+        private void MetroWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            tabsBehavior.Unsubscribe();
         }
     }
 }

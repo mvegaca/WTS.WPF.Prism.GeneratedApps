@@ -9,12 +9,12 @@
 
   <Identity
     Name="07ad151b-a614-4a13-aef0-5378d3f98e67"
-    Publisher="CN=mvega"
+    Publisher="CN=ilitio"
     Version="1.0.5.0" />
 
   <Properties>
     <DisplayName>RibbonApp.Packaging</DisplayName>
-    <PublisherDisplayName>mvega</PublisherDisplayName>
+    <PublisherDisplayName>ilitio</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -50,8 +50,8 @@
 
   <genTemplate:Metadata>
     <genTemplate:Item Name="generator" Value="Windows Template Studio"/>
-    <genTemplate:Item Name="wizardVersion" Version="v0.0.0.0" />
-    <genTemplate:Item Name="templatesVersion" Version="v0.0.0.0" />
+    <genTemplate:Item Name="wizardVersion" Version="v0.21.20042.1" />
+    <genTemplate:Item Name="templatesVersion" Version="v0.21.20042.1" />
     <genTemplate:Item Name="projectType" Value="Ribbon" />
     <genTemplate:Item Name="framework" Value="Prism" />
     <genTemplate:Item Name="platform" Value="Wpf" />
