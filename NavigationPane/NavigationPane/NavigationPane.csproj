@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NavigationPane.Core\NavigationPane.Core.csproj">
-      <Project>{4FCC7B91-1A48-4DD3-AB5F-942D634DD40A}</Project>
+      <Project>{db2fbc63-1e73-4554-b50b-9436a55fbdcc}</Project>
       <Name>NavigationPane.Core</Name>
     </ProjectReference>
   </ItemGroup>
