@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 using MahApps.Metro.Controls;
@@ -11,13 +10,17 @@ using Microsoft.Toolkit.Wpf.UI.Controls;
 
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 
 namespace MenuBar.ViewModels
 {
-    public class WebViewViewModel : BindableBase
+    public class WebViewViewModel : BindableBase, INavigationAware
     {
         // TODO WTS: Set the URI of the page to show by default
         private const string DefaultUrl = "https://docs.microsoft.com/windows/apps/";
+        private readonly IRightPaneService _rightPaneService;
+
+        private readonly ISystemService _systemService;
 
         private string _source;
         private bool _isLoading = true;
@@ -29,8 +32,6 @@ namespace MenuBar.ViewModels
         private DelegateCommand _browserForwardCommand;
         private ICommand _openInBrowserCommand;
         private WebView _webView;
-        private readonly IRightPaneService _rightPaneService;
-
 
         public string Source
         {
@@ -78,24 +79,23 @@ namespace MenuBar.ViewModels
 
         public ICommand OpenInBrowserCommand => _openInBrowserCommand ?? (_openInBrowserCommand = new DelegateCommand(OnOpenInBrowser));
 
-        public WebViewViewModel(IRightPaneService rightPaneService)
+        public WebViewViewModel(ISystemService systemService, IRightPaneService rightPaneService)
         {
+            _systemService = systemService;
             Source = DefaultUrl;
+            BrowserBackCommand.ObservesProperty(() => Source);
+            BrowserForwardCommand.ObservesProperty(() => Source);
             _rightPaneService = rightPaneService;
         }
 
         public void Initialize(WebView webView)
         {
             _webView = webView;
-            _rightPaneService.PaneOpened += OnRightPaneOpened;
-            _rightPaneService.PaneClosed += OnRightPaneClosed;
         }
 
         public void OnNavigationCompleted(WebViewControlNavigationCompletedEventArgs e)
         {
             IsLoading = false;
-            BrowserBackCommand.RaiseCanExecuteChanged();
-            BrowserForwardCommand.RaiseCanExecuteChanged();
             if (e != null && !e.IsSuccess)
             {
                 // Use `args.WebErrorStatus` to vary the displayed message based on the error reason
@@ -111,15 +111,23 @@ namespace MenuBar.ViewModels
         }
 
         private void OnOpenInBrowser()
+            => _systemService.OpenInWebBrowser(Source);
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            // There is an open Issue on this
-            // https://github.com/dotnet/corefx/issues/10361
-            ProcessStartInfo psi = new ProcessStartInfo
-            {
-                FileName = Source,
-                UseShellExecute = true
-            };
-            Process.Start(psi);
+            _rightPaneService.PaneOpened += OnRightPaneOpened;
+            _rightPaneService.PaneClosed += OnRightPaneClosed;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            _rightPaneService.PaneOpened -= OnRightPaneOpened;
+            _rightPaneService.PaneClosed -= OnRightPaneClosed;
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
         }
 
         private void OnRightPaneOpened(object sender, System.EventArgs e)

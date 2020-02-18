@@ -14,6 +14,8 @@
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="ReverseBooleanToVisibilityConverter" Reverse="True" />
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="models:AppTheme" />
     </UserControl.Resources>
     <Grid>
@@ -44,7 +46,7 @@
                         FontSize="{StaticResource MediumFontSize}"
                         IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light}">
                         <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Click">
+                            <i:EventTrigger EventName="Checked">
                                 <i:InvokeCommandAction Command="{Binding SetThemeCommand}" CommandParameter="Light" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
@@ -56,13 +58,60 @@
                         FontSize="{StaticResource MediumFontSize}"
                         IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark}">
                         <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Click">
+                            <i:EventTrigger EventName="Checked">
                                 <i:InvokeCommandAction Command="{Binding SetThemeCommand}" CommandParameter="Dark" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </RadioButton>
                 </StackPanel>
             </StackPanel>
+            <TextBlock
+                Text="{x:Static strings:Resources.SettingsPageUserTitle}"
+                Style="{StaticResource SubtitleTextStyle}" />
+
+            <StackPanel
+                Margin="{StaticResource SmallTopMargin}"
+                Orientation="Horizontal"
+                Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Ellipse Width="64" Height="64">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="{Binding User.Photo}" Stretch="UniformToFill" />
+                    </Ellipse.Fill>
+                </Ellipse>
+                <StackPanel Margin="{StaticResource SmallLeftMargin}">
+                    <TextBlock
+                        Text="{Binding User.Name}"
+                        Style="{StaticResource BodyTextStyle}" />
+                    <TextBlock
+                        Text="{Binding User.UserPrincipalName}"
+                        Margin="{StaticResource XSmallTopMargin}"
+                        Style="{StaticResource BodyTextStyle}" />
+                </StackPanel>
+            </StackPanel>
+            <TextBlock
+                Margin="{StaticResource SmallTopMargin}"
+                Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Hyperlink Command="{Binding LogOutCommand}">
+                    <TextBlock
+                        Style="{StaticResource BodyTextStyle}"
+                        Text="{x:Static strings:Resources.SettingsPageLogOutButtonText}" />
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock
+                    x:Uid="Settings_NoUserLoggedIn"
+                    Margin="{StaticResource SmallTopMargin}"
+                    Style="{StaticResource BodyTextStyle}"
+                    Visibility="{Binding IsLoggedIn, Converter={StaticResource ReverseBooleanToVisibilityConverter}}"
+                    Text="{x:Static strings:Resources.SettingsPageNoUserLoggedInText}"/>
+            <TextBlock
+                Margin="{StaticResource SmallTopMargin}"
+                Visibility="{Binding IsLoggedIn, Converter={StaticResource ReverseBooleanToVisibilityConverter}}">
+                <Hyperlink Command="{Binding LogInCommand}">
+                    <TextBlock
+                        Style="{StaticResource BodyTextStyle}"
+                        Text="{x:Static strings:Resources.SettingsPageLogInButtonText}" />
+                </Hyperlink>
+            </TextBlock>
 
             <TextBlock
                 Margin="{StaticResource SmallTopMargin}"
@@ -77,9 +126,14 @@
                 Style="{StaticResource BodyTextStyle}"
                 Text="{x:Static strings:Resources.SettingsPageAboutText}" />
 
-            <TextBlock Margin="{StaticResource SmallTopMargin}">
-                <Hyperlink Command="{Binding PrivacyStatementCommand}">
+            <TextBlock
+                Margin="{StaticResource SmallTopMargin}"
+                AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
+                <Hyperlink
+                    Command="{Binding PrivacyStatementCommand}"
+                    AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
                     <TextBlock
+                        x:Name="settingsPrivacyStatement"
                         Style="{StaticResource BodyTextStyle}"
                         Text="{x:Static strings:Resources.SettingsPagePrivacyStatementText}" />
                 </Hyperlink>

@@ -8,7 +8,7 @@
   IgnorableNamespaces="uap rescap genTemplate">
 
   <Identity
-    Name="07ad151b-a614-4a13-aef0-5378d3f98e67"
+    Name="DB8FA987-2727-4FA1-B0BF-3E79C73A79C7"
     Publisher="CN=mvega"
     Version="1.0.5.0" />
 
@@ -52,7 +52,7 @@
     <genTemplate:Item Name="generator" Value="Windows Template Studio"/>
     <genTemplate:Item Name="wizardVersion" Version="v0.0.0.0" />
     <genTemplate:Item Name="templatesVersion" Version="v0.0.0.0" />
-    <genTemplate:Item Name="projectType" Value="MenuBarWpf" />
+    <genTemplate:Item Name="projectType" Value="MenuBar" />
     <genTemplate:Item Name="framework" Value="Prism" />
     <genTemplate:Item Name="platform" Value="Wpf" />
   </genTemplate:Metadata>

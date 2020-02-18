@@ -256,5 +256,77 @@ namespace NavigationPane.Strings {
                 return ResourceManager.GetString("ShellSettingsPage", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to DialogAuthenticationTitle.
+        /// </summary>
+        public static string DialogAuthenticationTitle {
+            get {
+                return ResourceManager.GetString("DialogAuthenticationTitle", resourceCulture);
+            }
+        }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to DialogNoNetworkAvailableContent.
+        /// </summary>
+        public static string DialogNoNetworkAvailableContent {
+            get {
+                return ResourceManager.GetString("DialogNoNetworkAvailableContent", resourceCulture);
+            }
+        }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to DialogStatusUnknownErrorContent.
+        /// </summary>
+        public static string DialogStatusUnknownErrorContent {
+            get {
+                return ResourceManager.GetString("DialogStatusUnknownErrorContent", resourceCulture);
+            }
+        }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to SettingsPageLogInButtonText.
+        /// </summary>
+        public static string SettingsPageLogInButtonText {
+            get {
+                return ResourceManager.GetString("SettingsPageLogInButtonText", resourceCulture);
+            }
+        }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to SettingsPageNoUserLoggedInText.
+        /// </summary>
+        public static string SettingsPageNoUserLoggedInText {
+            get {
+                return ResourceManager.GetString("SettingsPageNoUserLoggedInText", resourceCulture);
+            }
+        }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to SettingsPageUserTitle.
+        /// </summary>
+        public static string SettingsPageUserTitle {
+            get {
+                return ResourceManager.GetString("SettingsPageUserTitle", resourceCulture);
+            }
+        }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to SettingsPageLogOutButtonText.
+        /// </summary>
+        public static string SettingsPageLogOutButtonText {
+            get {
+                return ResourceManager.GetString("SettingsPageLogOutButtonText", resourceCulture);
+            }
+        }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Shell_LogIn.
+        /// </summary>
+        public static string Shell_LogIn {
+            get {
+                return ResourceManager.GetString("Shell_LogIn", resourceCulture);
+            }
+        }
     }
 }

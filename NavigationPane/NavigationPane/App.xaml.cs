@@ -2,10 +2,12 @@
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 using NavigationPane.Constants;
 using NavigationPane.Contracts.Services;
@@ -30,44 +32,72 @@ namespace NavigationPane
         {
         }
 
+        public object GetPageType(string pageKey)
+            => Container.Resolve<object>(pageKey);
+
         protected override Window CreateShell()
             => Container.Resolve<ShellWindow>();
 
-        public override void Initialize()
+        protected async override void InitializeShell(Window shell)
         {
-            base.Initialize();
+            base.InitializeShell(shell);
             var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
             persistAndRestoreService.RestoreData();
+            await Task.CompletedTask;
             var themeSelectorService = Container.Resolve<IThemeSelectorService>();
             themeSelectorService.SetTheme();
+            var userDataService = Container.Resolve<IUserDataService>();
+            userDataService.Initialize();
+            var identityService = Container.Resolve<IIdentityService>();
+            var config = Container.Resolve<AppConfig>();
+            identityService.InitializeWithAadAndPersonalMsAccounts(config.IdentityClientId, "http://localhost");
+            await identityService.AcquireTokenSilentAsync();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        public async override void Initialize()
+        {
+            base.Initialize();
+            await Task.CompletedTask;
+        }
+
+        protected async override void OnStartup(StartupEventArgs e)
         {
             _startUpArgs = e.Args;
             base.OnStartup(e);
+            await Task.CompletedTask;
         }
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        protected async override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Core Services
-            containerRegistry.Register<IFilesService, FilesService>();
+            containerRegistry.Register<IMicrosoftGraphService, MicrosoftGraphService>();
+
+            PrismContainerExtension.Create(Container.GetContainer());
+            PrismContainerExtension.Current.RegisterServices(s =>
+            {
+                s.AddHttpClient("msgraph", client =>
+                {
+                    client.BaseAddress = new System.Uri("https://graph.microsoft.com/v1.0/");
+                });
+            });
+
+            containerRegistry.Register<IIdentityCacheService, IdentityCacheService>();
+            containerRegistry.RegisterSingleton<IIdentityService, IdentityService>();
+            containerRegistry.Register<IFileService, FileService>();
 
             // App Services
+            containerRegistry.RegisterSingleton<IUserDataService, UserDataService>();
             containerRegistry.Register<IPersistAndRestoreService, PersistAndRestoreService>();
             containerRegistry.Register<IThemeSelectorService, ThemeSelectorService>();
+            containerRegistry.Register<ISystemService, SystemService>();
             containerRegistry.Register<ISampleDataService, SampleDataService>();
 
             // Views
-            containerRegistry.RegisterForNavigation<ShellWindow>();
-
-            containerRegistry.RegisterForNavigation<MainPage>(PageKeys.Main);
-
-            containerRegistry.RegisterForNavigation<MasterDetailPage>(PageKeys.MasterDetail);
-
-            containerRegistry.RegisterForNavigation<WebViewPage>(PageKeys.WebView);
-
-            containerRegistry.RegisterForNavigation<SettingsPage>(PageKeys.Settings);
+            containerRegistry.RegisterForNavigation<SettingsPage, SettingsViewModel>(PageKeys.Settings);
+            containerRegistry.RegisterForNavigation<WebViewPage, WebViewViewModel>(PageKeys.WebView);
+            containerRegistry.RegisterForNavigation<MasterDetailPage, MasterDetailViewModel>(PageKeys.MasterDetail);
+            containerRegistry.RegisterForNavigation<MainPage, MainViewModel>(PageKeys.Main);
+            containerRegistry.RegisterForNavigation<ShellWindow, ShellViewModel>();
 
             // Configuration
             var configuration = BuildConfiguration();
@@ -78,6 +108,8 @@ namespace NavigationPane
             // Register configurations to IoC
             containerRegistry.RegisterInstance<IConfiguration>(configuration);
             containerRegistry.RegisterInstance<AppConfig>(appConfig);
+
+            await Task.CompletedTask;
         }
 
         private IConfiguration BuildConfiguration()
@@ -90,22 +122,9 @@ namespace NavigationPane
                 .Build();
         }
 
-        protected override void ConfigureViewModelLocator()
+        private async void OnExit(object sender, ExitEventArgs e)
         {
-            base.ConfigureViewModelLocator();
-
-            // We are remapping the default ViewName and ViewNameViewModel naming to ViewNamePage and ViewNameViewModel to
-            // gain better code reuse with other frameworks and pages within Windows Template Studio
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
-            {
-                var viewModelName = string.Format(CultureInfo.InvariantCulture, "NavigationPane.ViewModels.{0}ViewModel, NavigationPane", viewType.Name[0..^4]);
-                return Type.GetType(viewModelName);
-            });
-            ViewModelLocationProvider.Register(typeof(ShellWindow).FullName, typeof(ShellViewModel));
-        }
-
-        private void OnExit(object sender, ExitEventArgs e)
-        {
+            await Task.CompletedTask;
             var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
             persistAndRestoreService.PersistData();
         }

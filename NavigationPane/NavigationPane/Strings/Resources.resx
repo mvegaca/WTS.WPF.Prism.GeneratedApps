@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+    <data name="Shell_LogIn" xml:space="preserve">
+        <value>Log in</value>
+    </data>
+    <data name="SettingsPageUserTitle" xml:space="preserve">
+        <value>User</value>
+    </data>
+
+    <data name="SettingsPageLogOutButtonText" xml:space="preserve">
+        <value>Log out</value>
+        <comment>Log out button in Settings page</comment>
+    </data>
+    <data name="DialogAuthenticationTitle" xml:space="preserve">
+        <value>Application Authentication</value>
+    </data>
+    <data name="DialogNoNetworkAvailableContent" xml:space="preserve">
+        <value>There is no internet connection, please connect to the internet and try again.</value>
+    </data>
+    <data name="DialogStatusUnknownErrorContent" xml:space="preserve">
+        <value>Something went wrong during the login, please try again.</value>
+    </data>
+    <data name="SettingsPageLogInButtonText" xml:space="preserve">
+        <value>Log In</value>
+    </data>
+    <data name="SettingsPageNoUserLoggedInText" xml:space="preserve">
+        <value>There is no user logged in, please click "Log In" to log in.</value>
+    </data>
     <data name="ShellSettingsPage" xml:space="preserve">
 		    <value>Settings</value>
     </data>
@@ -31,10 +57,10 @@
 		    <value>WebView</value>
     </data>
     <data name="WebViewPageBackButtonTooltip" xml:space="preserve">
-        <value>Back</value>
+        <value>Back (Alt + Left)</value>
     </data>
     <data name="WebViewPageForwardButtonTooltip" xml:space="preserve">
-        <value>Forward</value>
+        <value>Forward (Alt + Right)</value>
     </data>
     <data name="WebViewPageLoadingText" xml:space="preserve">
         <value>Loading...</value>
@@ -43,10 +69,10 @@
         <value>Page failed to load. Check connection and retry.</value>
     </data>
     <data name="WebViewPageRefreshButtonTooltip" xml:space="preserve">
-        <value>Refresh</value>
+        <value>Refresh (F5)</value>
     </data>
     <data name="WebViewPageOpenInBrowserButtonTooltip" xml:space="preserve">
-        <value>Open in browser</value>
+        <value>Open in browser (Ctrl + T)</value>
     </data>
     <data name="ShellMasterDetailPage" xml:space="preserve">
 		    <value>MasterDetail</value>
