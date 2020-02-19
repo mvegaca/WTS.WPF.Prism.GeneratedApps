@@ -1,130 +1,53 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
+using GalaSoft.MvvmLight.Ioc;
+
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Unity;
-
-using RibbonApp.Constants;
 using RibbonApp.Contracts.Services;
-using RibbonApp.Core.Contracts.Services;
-using RibbonApp.Core.Services;
-using RibbonApp.Models;
-using RibbonApp.Services;
 using RibbonApp.ViewModels;
-using RibbonApp.Views;
 
 namespace RibbonApp
 {
-    public partial class App : PrismApplication
+    // For more inforation about application lifecyle events see https://docs.microsoft.com/dotnet/framework/wpf/app-development/application-management-overview
+    public partial class App : Application
     {
-        private string[] _startUpArgs;
+        private IApplicationHostService _host;
+
+        public ViewModelLocator Locator
+            => Resources["Locator"] as ViewModelLocator;
 
         public App()
         {
         }
 
-        protected override Window CreateShell()
-            => Container.Resolve<ShellWindow>();
-
-        protected async override void InitializeShell(Window shell)
+        private async void OnStartup(object sender, StartupEventArgs e)
         {
-            base.InitializeShell(shell);
-            var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
-            persistAndRestoreService.RestoreData();
-            await Task.CompletedTask;
-            var themeSelectorService = Container.Resolve<IThemeSelectorService>();
-            themeSelectorService.SetTheme();
-            var userDataService = Container.Resolve<IUserDataService>();
-            userDataService.Initialize();
-            var identityService = Container.Resolve<IIdentityService>();
-            var config = Container.Resolve<AppConfig>();
-            identityService.InitializeWithAadAndPersonalMsAccounts(config.IdentityClientId, "http://localhost");
-            await identityService.AcquireTokenSilentAsync();
+            AddConfiguration(e.Args);
+            _host = SimpleIoc.Default.GetInstance<IApplicationHostService>();
+            await _host.StartAsync();
         }
 
-        public async override void Initialize()
-        {
-            base.Initialize();
-            await Task.CompletedTask;
-        }
-
-        protected async override void OnStartup(StartupEventArgs e)
-        {
-            _startUpArgs = e.Args;
-            base.OnStartup(e);
-            await Task.CompletedTask;
-        }
-
-        protected async override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            // Core Services
-            containerRegistry.Register<IMicrosoftGraphService, MicrosoftGraphService>();
-
-            PrismContainerExtension.Create(Container.GetContainer());
-            PrismContainerExtension.Current.RegisterServices(s =>
-            {
-                s.AddHttpClient("msgraph", client =>
-                {
-                    client.BaseAddress = new System.Uri("https://graph.microsoft.com/v1.0/");
-                });
-            });
-
-            containerRegistry.Register<IIdentityCacheService, IdentityCacheService>();
-            containerRegistry.RegisterSingleton<IIdentityService, IdentityService>();
-            containerRegistry.Register<IFileService, FileService>();
-
-            // App Services
-            containerRegistry.RegisterSingleton<IUserDataService, UserDataService>();
-            containerRegistry.Register<IPersistAndRestoreService, PersistAndRestoreService>();
-            containerRegistry.Register<IThemeSelectorService, ThemeSelectorService>();
-            containerRegistry.Register<ISystemService, SystemService>();
-            containerRegistry.Register<ISampleDataService, SampleDataService>();
-            containerRegistry.RegisterSingleton<IRightPaneService, RightPaneService>();
-
-            // Views
-            containerRegistry.RegisterForNavigation<SettingsPage, SettingsViewModel>(PageKeys.Settings);
-            containerRegistry.RegisterForNavigation<WebViewPage, WebViewViewModel>(PageKeys.WebView);
-            containerRegistry.RegisterForNavigation<MasterDetailPage, MasterDetailViewModel>(PageKeys.MasterDetail);
-            containerRegistry.RegisterForNavigation<MainPage, MainViewModel>(PageKeys.Main);
-            containerRegistry.RegisterForNavigation<ShellWindow, ShellViewModel>();
-
-            // Configuration
-            var configuration = BuildConfiguration();
-            var appConfig = configuration
-                .GetSection(nameof(AppConfig))
-                .Get<AppConfig>();
-
-            // Register configurations to IoC
-            containerRegistry.RegisterInstance<IConfiguration>(configuration);
-            containerRegistry.RegisterInstance<AppConfig>(appConfig);
-
-            await Task.CompletedTask;
-        }
-
-        private IConfiguration BuildConfiguration()
+        private void AddConfiguration(string[] args)
         {
             var appLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            return new ConfigurationBuilder()
+
+            IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(appLocation)
+                .AddCommandLine(args)
                 .AddJsonFile("appsettings.json")
-                .AddCommandLine(_startUpArgs)
                 .Build();
+
+            Locator.AddConfiguration(configuration);
         }
 
         private async void OnExit(object sender, ExitEventArgs e)
         {
-            await Task.CompletedTask;
-            var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
-            persistAndRestoreService.PersistData();
+            await _host.StopAsync();
+            _host = null;
         }
 
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

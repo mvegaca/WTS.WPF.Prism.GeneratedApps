@@ -3,8 +3,6 @@ using System.Windows.Controls;
 
 using MahApps.Metro.Controls;
 
-using Prism.Regions;
-
 namespace RibbonApp.Contracts.Services
 {
     public interface IRightPaneService
@@ -13,8 +11,8 @@ namespace RibbonApp.Contracts.Services
 
         event EventHandler PaneClosed;
 
-        void OpenInRightPane(string pageKey, NavigationParameters navigationParameters = null);
+        void OpenInRightPane(string pageKey, object parameter = null);
 
-        void Initialize(SplitView splitView, ContentControl rightPaneContentControl);
+        void Initialize(Frame rightPaneFrame, SplitView splitView);
     }
 }

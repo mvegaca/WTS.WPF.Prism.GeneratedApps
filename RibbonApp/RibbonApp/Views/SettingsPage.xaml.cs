@@ -2,7 +2,7 @@
 
 namespace RibbonApp.Views
 {
-    public partial class SettingsPage : UserControl
+    public partial class SettingsPage : Page
     {
         public SettingsPage()
         {

@@ -1,20 +1,27 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
 using Fluent;
 
 using Microsoft.Xaml.Behaviors;
 
-using Prism.Regions;
+using RibbonApp.Contracts.Services;
+using RibbonApp.Contracts.ViewModels;
 
 namespace RibbonApp.Behaviors
 {
     public class BackstageTabNavigationBehavior : Behavior<BackstageTabControl>
     {
-        private IRegionManager _regionManager;
+        private IPageService _pageService;
 
-        public void Initialize(IRegionManager regionManager)
+        public BackstageTabNavigationBehavior()
         {
-            _regionManager = regionManager;
+        }
+
+        public void Initialize(IPageService pageService)
+        {
+            _pageService = pageService;
         }
 
         protected override void OnAttached()
@@ -33,16 +40,26 @@ namespace RibbonApp.Behaviors
         {
             if (e.AddedItems.Count > 0 && e.AddedItems[0] is BackstageTabItem tabItem)
             {
-                var viewName = tabItem.Tag as string;
-                if (tabItem.Content == null)
+                var frame = new Frame()
                 {
-                    var contentControl = new ContentControl();
-                    tabItem.Content = contentControl;
-                    RegionManager.SetRegionName(contentControl, viewName);
-                    RegionManager.SetRegionManager(contentControl, _regionManager);
-                }
+                    Focusable = false,
+                    NavigationUIVisibility = NavigationUIVisibility.Hidden
+                };
+                frame.Navigated += OnNavigated;
+                tabItem.Content = frame;
+                var page = _pageService.GetPage(tabItem.Tag as string);
+                frame.Navigate(page);
+            }
+        }
 
-                _regionManager.RequestNavigate(viewName, viewName);
+        private void OnNavigated(object sender, NavigationEventArgs e)
+        {
+            if (e.Content is FrameworkElement element)
+            {
+                if (element.DataContext is INavigationAware navigationAware)
+                {
+                    navigationAware.OnNavigatedTo(e.ExtraData);
+                }
             }
         }
     }

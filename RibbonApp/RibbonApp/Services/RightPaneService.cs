@@ -1,51 +1,74 @@
 ﻿using System;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 using MahApps.Metro.Controls;
 
-using Prism.Regions;
-
-using RibbonApp.Constants;
 using RibbonApp.Contracts.Services;
+using RibbonApp.Contracts.ViewModels;
 
 namespace RibbonApp.Services
 {
     public class RightPaneService : IRightPaneService
     {
-        private readonly IRegionManager _regionManager;
-        private IRegionNavigationService _rightPaneNavigationService;
+        private readonly IPageService _pageService;
+        private Frame _frame;
+        private object _lastParameterUsed;
         private SplitView _splitView;
 
         public event EventHandler PaneOpened;
 
         public event EventHandler PaneClosed;
 
-        public RightPaneService(IRegionManager regionManager)
+        public RightPaneService(IPageService pageService)
         {
-            _regionManager = regionManager;
+            _pageService = pageService;
         }
 
-        public void Initialize(SplitView splitView, ContentControl rightPaneContentControl)
+        public void Initialize(Frame rightPaneFrame, SplitView splitView)
         {
+            _frame = rightPaneFrame;
             _splitView = splitView;
-            RegionManager.SetRegionName(rightPaneContentControl, Regions.RightPane);
-            RegionManager.SetRegionManager(rightPaneContentControl, _regionManager);
-            _rightPaneNavigationService = _regionManager.Regions[Regions.RightPane].NavigationService;
+            _frame.Navigated += OnNavigated;
             _splitView.PaneClosed += OnPaneClosed;
         }
 
-        public void OpenInRightPane(string pageKey, NavigationParameters navigationParameters = null)
+        public void OpenInRightPane(string pageKey, object parameter = null)
         {
-            if (_rightPaneNavigationService.CanNavigate(pageKey))
+            var pageType = _pageService.GetPageType(pageKey);
+            if (_frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(_lastParameterUsed)))
             {
-                _rightPaneNavigationService.RequestNavigate(pageKey, navigationParameters);
+                var page = _pageService.GetPage(pageKey);
+                var navigated = _frame.Navigate(page, parameter);
+                if (navigated)
+                {
+                    _lastParameterUsed = parameter;
+                    var dataContext = _frame.GetDataContext();
+                    if (dataContext is INavigationAware navigationAware)
+                    {
+                        navigationAware.OnNavigatedFrom();
+                    }
+                }
             }
 
             _splitView.IsPaneOpen = true;
             PaneOpened?.Invoke(_splitView, EventArgs.Empty);
         }
 
+        private void OnNavigated(object sender, NavigationEventArgs e)
+        {
+            if (sender is Frame frame)
+            {
+                frame.CleanNavigation();
+                var dataContext = frame.GetDataContext();
+                if (dataContext is INavigationAware navigationAware)
+                {
+                    navigationAware.OnNavigatedTo(e.ExtraData);
+                }
+            }
+        }
+
         private void OnPaneClosed(object sender, EventArgs e)
-           => PaneClosed?.Invoke(sender, e);
+            => PaneClosed?.Invoke(sender, e);
     }
 }

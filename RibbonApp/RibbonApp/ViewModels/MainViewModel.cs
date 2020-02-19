@@ -1,10 +1,10 @@
 ﻿using System;
 
-using Prism.Mvvm;
+using GalaSoft.MvvmLight;
 
 namespace RibbonApp.ViewModels
 {
-    public class MainViewModel : BindableBase
+    public class MainViewModel : ViewModelBase
     {
         public MainViewModel()
         {

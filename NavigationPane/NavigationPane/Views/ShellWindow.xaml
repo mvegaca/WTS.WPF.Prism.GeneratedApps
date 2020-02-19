@@ -10,7 +10,6 @@
     xmlns:templateSelectors="clr-namespace:NavigationPane.TemplateSelectors"
     xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    xmlns:behaviors="clr-namespace:NavigationPane.Behaviors"
     Style="{StaticResource CustomMetroWindow}"
     mc:Ignorable="d"
     Title="{x:Static strings:Resources.AppDisplayName}">
@@ -100,11 +99,6 @@
             OptionsItemCommand="{Binding OptionsMenuItemInvokedCommand}"
             ItemTemplateSelector="{StaticResource MenuItemTemplateSelector}"
             OptionsItemTemplateSelector="{StaticResource MenuItemTemplateSelector}">
-            <i:Interaction.Behaviors>
-                <behaviors:MenuItemsEnabledBehavior
-                    IsEnabled="{Binding IsAuthorized}"
-                    ApplyTo="{Binding IsPageRestricted}" />
-            </i:Interaction.Behaviors>
             <controls:HamburgerMenu.Content>
                 <ContentControl x:Name="hamburgerMenuContentControl" />
             </controls:HamburgerMenu.Content>

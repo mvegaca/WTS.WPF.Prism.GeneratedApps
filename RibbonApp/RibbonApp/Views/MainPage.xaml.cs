@@ -2,7 +2,7 @@
 
 namespace RibbonApp.Views
 {
-    public partial class MainPage : UserControl
+    public partial class MainPage : Page
     {
         public MainPage()
         {

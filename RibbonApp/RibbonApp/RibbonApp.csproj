@@ -7,12 +7,6 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Assets\DefaultIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\DefaultIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Update="Strings\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -31,20 +25,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.Container.Extensions" Version="7.2.0.898" />
-    <PackageReference Include="Prism.Unity.Extensions" Version="7.2.0.898" />
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.0.0" />
+    <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
     <PackageReference Include="Fluent.Ribbon" Version="7.0.1" />
     <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.1" />
-    <PackageReference Include="Prism.Unity" Version="7.2.0.1422" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RibbonApp.Core\RibbonApp.Core.csproj">
-      <Project>{736c907d-2d18-49cd-94f9-765346c232a8}</Project>
+      <Project>{f0f872ac-76a9-4ff7-ad17-6d33bcc87074}</Project>
       <Name>RibbonApp.Core</Name>
     </ProjectReference>
   </ItemGroup>

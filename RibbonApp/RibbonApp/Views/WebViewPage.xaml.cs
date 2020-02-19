@@ -6,7 +6,7 @@ using RibbonApp.ViewModels;
 
 namespace RibbonApp.Views
 {
-    public partial class WebViewPage : UserControl
+    public partial class WebViewPage : Page
     {
         private WebViewViewModel ViewModel
             => DataContext as WebViewViewModel;

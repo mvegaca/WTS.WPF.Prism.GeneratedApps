@@ -8,7 +8,7 @@
   IgnorableNamespaces="uap rescap genTemplate">
 
   <Identity
-    Name="EAD08F82-8E7D-4041-80CE-1A60D8802CE4"
+    Name="7989E1BB-DC8C-4934-9606-EA1764AD0875"
     Publisher="CN=mvega"
     Version="1.0.5.0" />
 
@@ -53,7 +53,7 @@
     <genTemplate:Item Name="wizardVersion" Version="v0.0.0.0" />
     <genTemplate:Item Name="templatesVersion" Version="v0.0.0.0" />
     <genTemplate:Item Name="projectType" Value="Ribbon" />
-    <genTemplate:Item Name="framework" Value="Prism" />
+    <genTemplate:Item Name="framework" Value="MVVMLight" />
     <genTemplate:Item Name="platform" Value="Wpf" />
   </genTemplate:Metadata>
 </Package>

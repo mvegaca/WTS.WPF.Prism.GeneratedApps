@@ -1,31 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <data name="Shell_LogIn" xml:space="preserve">
-        <value>Log in</value>
-    </data>
-    <data name="SettingsPageUserTitle" xml:space="preserve">
-        <value>User</value>
-    </data>
-
-    <data name="SettingsPageLogOutButtonText" xml:space="preserve">
-        <value>Log out</value>
-        <comment>Log out button in Settings page</comment>
-    </data>
-    <data name="DialogAuthenticationTitle" xml:space="preserve">
-        <value>Application Authentication</value>
-    </data>
-    <data name="DialogNoNetworkAvailableContent" xml:space="preserve">
-        <value>There is no internet connection, please connect to the internet and try again.</value>
-    </data>
-    <data name="DialogStatusUnknownErrorContent" xml:space="preserve">
-        <value>Something went wrong during the login, please try again.</value>
-    </data>
-    <data name="SettingsPageLogInButtonText" xml:space="preserve">
-        <value>Log In</value>
-    </data>
-    <data name="SettingsPageNoUserLoggedInText" xml:space="preserve">
-        <value>There is no user logged in, please click "Log In" to log in.</value>
-    </data>
     <data name="ShellSettingsPage" xml:space="preserve">
 		    <value>Settings</value>
     </data>

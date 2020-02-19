@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Threading;
 
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 using NavigationPane.Constants;
 using NavigationPane.Contracts.Services;
@@ -32,9 +31,6 @@ namespace NavigationPane
         {
         }
 
-        public object GetPageType(string pageKey)
-            => Container.Resolve<object>(pageKey);
-
         protected override Window CreateShell()
             => Container.Resolve<ShellWindow>();
 
@@ -46,12 +42,6 @@ namespace NavigationPane
             await Task.CompletedTask;
             var themeSelectorService = Container.Resolve<IThemeSelectorService>();
             themeSelectorService.SetTheme();
-            var userDataService = Container.Resolve<IUserDataService>();
-            userDataService.Initialize();
-            var identityService = Container.Resolve<IIdentityService>();
-            var config = Container.Resolve<AppConfig>();
-            identityService.InitializeWithAadAndPersonalMsAccounts(config.IdentityClientId, "http://localhost");
-            await identityService.AcquireTokenSilentAsync();
         }
 
         public async override void Initialize()
@@ -70,23 +60,9 @@ namespace NavigationPane
         protected async override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Core Services
-            containerRegistry.Register<IMicrosoftGraphService, MicrosoftGraphService>();
-
-            PrismContainerExtension.Create(Container.GetContainer());
-            PrismContainerExtension.Current.RegisterServices(s =>
-            {
-                s.AddHttpClient("msgraph", client =>
-                {
-                    client.BaseAddress = new System.Uri("https://graph.microsoft.com/v1.0/");
-                });
-            });
-
-            containerRegistry.Register<IIdentityCacheService, IdentityCacheService>();
-            containerRegistry.RegisterSingleton<IIdentityService, IdentityService>();
             containerRegistry.Register<IFileService, FileService>();
 
             // App Services
-            containerRegistry.RegisterSingleton<IUserDataService, UserDataService>();
             containerRegistry.Register<IPersistAndRestoreService, PersistAndRestoreService>();
             containerRegistry.Register<IThemeSelectorService, ThemeSelectorService>();
             containerRegistry.Register<ISystemService, SystemService>();

@@ -7,12 +7,6 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Assets\DefaultIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\DefaultIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Update="Strings\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -31,8 +25,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.Container.Extensions" Version="7.2.0.898" />
-    <PackageReference Include="Prism.Unity.Extensions" Version="7.2.0.898" />
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.0.0" />
     <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
@@ -43,7 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MenuBar.Core\MenuBar.Core.csproj">
-      <Project>{77ee93c1-51b8-4fcc-b23b-23aec8fa4670}</Project>
+      <Project>{5b1deb8d-3af3-44d4-9fdf-db43f5640ad8}</Project>
       <Name>MenuBar.Core</Name>
     </ProjectReference>
   </ItemGroup>

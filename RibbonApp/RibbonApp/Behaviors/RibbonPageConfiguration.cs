@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 using Fluent;
 
-using Prism.Mvvm;
+using GalaSoft.MvvmLight;
 
 namespace RibbonApp.Behaviors
 {
@@ -18,7 +18,7 @@ namespace RibbonApp.Behaviors
         {
         }
 
-        public void SetDataContext(BindableBase viewModel, BindingMode bindingMode = BindingMode.OneWay)
+        public void SetDataContext(ViewModelBase viewModel, BindingMode bindingMode = BindingMode.OneWay)
         {
             foreach (var groups in HomeGroups)
             {

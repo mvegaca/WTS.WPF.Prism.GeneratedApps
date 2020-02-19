@@ -2,15 +2,15 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-using Prism.Mvvm;
-using Prism.Regions;
+using GalaSoft.MvvmLight;
 
+using RibbonApp.Contracts.ViewModels;
 using RibbonApp.Core.Contracts.Services;
 using RibbonApp.Core.Models;
 
 namespace RibbonApp.ViewModels
 {
-    public class MasterDetailViewModel : BindableBase, INavigationAware
+    public class MasterDetailViewModel : ViewModelBase, INavigationAware
     {
         private readonly ISampleDataService _sampleDataService;
         private SampleOrder _selected;
@@ -18,7 +18,7 @@ namespace RibbonApp.ViewModels
         public SampleOrder Selected
         {
             get { return _selected; }
-            set { SetProperty(ref _selected, value); }
+            set { Set(ref _selected, value); }
         }
 
         public ObservableCollection<SampleOrder> SampleItems { get; private set; } = new ObservableCollection<SampleOrder>();
@@ -28,7 +28,7 @@ namespace RibbonApp.ViewModels
             _sampleDataService = sampleDataService;
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(object parameter)
         {
             SampleItems.Clear();
 
@@ -42,11 +42,8 @@ namespace RibbonApp.ViewModels
             Selected = SampleItems.First();
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public void OnNavigatedFrom()
         {
         }
-
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-            => true;
     }
 }

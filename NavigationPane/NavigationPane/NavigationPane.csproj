@@ -7,12 +7,6 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Assets\DefaultIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\DefaultIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Update="Strings\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -31,8 +25,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.Container.Extensions" Version="7.2.0.898" />
-    <PackageReference Include="Prism.Unity.Extensions" Version="7.2.0.898" />
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.0.0" />
     <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
@@ -43,7 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NavigationPane.Core\NavigationPane.Core.csproj">
-      <Project>{db2fbc63-1e73-4554-b50b-9436a55fbdcc}</Project>
+      <Project>{353bedfa-8a39-47e1-a44c-ce837ae71df8}</Project>
       <Name>NavigationPane.Core</Name>
     </ProjectReference>
   </ItemGroup>
