@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <data name="ShellPageRibbonBackstageTabSettingsHeader" xml:space="preserve">
+    <data name="SettingsPageTitle" xml:space="preserve">
 		    <value>Settings</value>
     </data>
-    <data name="SettingsPageTitle" xml:space="preserve">
+    <data name="ShellPageRibbonBackstageTabSettingsHeader" xml:space="preserve">
 		    <value>Settings</value>
     </data>
     <data name="SettingsPageAboutText" xml:space="preserve">

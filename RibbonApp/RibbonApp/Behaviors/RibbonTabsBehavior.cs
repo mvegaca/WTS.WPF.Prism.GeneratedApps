@@ -7,7 +7,9 @@ using Fluent;
 
 using Microsoft.Xaml.Behaviors;
 
-using RibbonApp.Contracts.Services;
+using Prism.Regions;
+
+using RibbonApp.Constants;
 using RibbonApp.Models;
 
 namespace RibbonApp.Behaviors
@@ -15,7 +17,7 @@ namespace RibbonApp.Behaviors
     // See how to add new Tabs and new groups in Home Tab from your pages https://github.com/microsoft/WindowsTemplateStudio/blob/master/docs/WPF/projectTypes/ribbon.md
     public class RibbonTabsBehavior : Behavior<Ribbon>
     {
-        private INavigationService _navigationService;
+        private IRegionManager _regionManager;
 
         public static readonly DependencyProperty IsHomeTabProperty = DependencyProperty.RegisterAttached(
             "IsHomeTab", typeof(bool), typeof(RibbonTabsBehavior), new PropertyMetadata(default(bool)));
@@ -44,39 +46,35 @@ namespace RibbonApp.Behaviors
         public static readonly DependencyProperty IsGroupFromPageProperty =
             DependencyProperty.RegisterAttached("IsGroupFromPage", typeof(bool), typeof(RibbonGroupBox), new PropertyMetadata(false));
 
-        public static RibbonPageConfiguration GetPageConfiguration(Page item)
+        public static RibbonPageConfiguration GetPageConfiguration(UserControl item)
             => (RibbonPageConfiguration)item.GetValue(PageConfigurationProperty);
 
-        public static void SetPageConfiguration(Page item, RibbonPageConfiguration value)
+        public static void SetPageConfiguration(UserControl item, RibbonPageConfiguration value)
             => item.SetValue(PageConfigurationProperty, value);
 
         public static readonly DependencyProperty PageConfigurationProperty =
-            DependencyProperty.Register("PageConfiguration", typeof(RibbonPageConfiguration), typeof(Page), new PropertyMetadata(new RibbonPageConfiguration()));
+            DependencyProperty.Register("PageConfiguration", typeof(RibbonPageConfiguration), typeof(UserControl), new PropertyMetadata(new RibbonPageConfiguration()));
 
-        public void Initialize(INavigationService navigationService)
+        public void Initialize(IRegionManager regionManager)
         {
-            _navigationService = navigationService;
-            _navigationService.Navigated += OnNavigated;
+            _regionManager = regionManager;
+            var navigationService = _regionManager.Regions[Regions.Main].NavigationService;
+            navigationService.Navigated += OnNavigated;
         }
 
         public void Unsubscribe()
         {
-            if (_navigationService != null)
-            {
-                _navigationService.Navigated -= OnNavigated;
-            }
+            var navigationService = _regionManager.Regions[Regions.Main].NavigationService;
+            navigationService.Navigated -= OnNavigated;
         }
 
-        private void OnNavigated(object sender, string e)
+        private void OnNavigated(object sender, RegionNavigationEventArgs e)
         {
-            var frame = sender as Frame;
-            if (frame != null && frame.Content is Page page)
-            {
-                UpdateTabs(page);
-            }
+            var page = _regionManager.Regions[Regions.Main].ActiveViews.First() as UserControl;
+            UpdateTabs(page);
         }
 
-        private void UpdateTabs(Page page)
+        private void UpdateTabs(UserControl page)
         {
             if (page != null)
             {
@@ -88,17 +86,15 @@ namespace RibbonApp.Behaviors
 
         private void SetupHomeGroups(Collection<RibbonGroupBox> homeGroups)
         {
-            var homeTab = AssociatedObject.Tabs.FirstOrDefault(GetIsHomeTab);
-            if (homeTab == null)
+            var homeTab = AssociatedObject.Tabs.FirstOrDefault();
+            if (homeTab != null)
             {
-                return;
-            }
-
-            for (int i = homeTab.Groups.Count - 1; i >= 0; i--)
-            {
-                if (GetIsGroupFromPage(homeTab.Groups[i]))
+                for (int i = homeTab.Groups.Count - 1; i >= 0; i--)
                 {
-                    homeTab.Groups.RemoveAt(i);
+                    if (GetIsGroupFromPage(homeTab.Groups[i]))
+                    {
+                        homeTab.Groups.RemoveAt(i);
+                    }
                 }
             }
 

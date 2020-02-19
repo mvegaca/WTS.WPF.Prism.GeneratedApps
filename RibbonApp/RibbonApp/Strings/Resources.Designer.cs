@@ -240,20 +240,20 @@ namespace RibbonApp.Strings {
             }
     
         /// <summary>
-        ///   Looks up a localized string similar to Settings.
-        /// </summary>
-        public static string SettingsPageTitle {
-            get {
-                return ResourceManager.GetString("SettingsPageTitle", resourceCulture);
-            }
-        }
-    
-        /// <summary>
         ///   Looks up a localized string similar to ShellPageRibbonBackstageTabSettingsHeader.
         /// </summary>
         public static string ShellPageRibbonBackstageTabSettingsHeader {
             get {
                 return ResourceManager.GetString("ShellPageRibbonBackstageTabSettingsHeader", resourceCulture);
+            }
+        }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string SettingsPageTitle {
+            get {
+                return ResourceManager.GetString("SettingsPageTitle", resourceCulture);
             }
         }
     }

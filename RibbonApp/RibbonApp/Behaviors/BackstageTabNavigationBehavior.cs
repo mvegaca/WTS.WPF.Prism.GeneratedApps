@@ -1,27 +1,20 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
+﻿using System.Windows.Controls;
 
 using Fluent;
 
 using Microsoft.Xaml.Behaviors;
 
-using RibbonApp.Contracts.Services;
-using RibbonApp.Contracts.ViewModels;
+using Prism.Regions;
 
 namespace RibbonApp.Behaviors
 {
     public class BackstageTabNavigationBehavior : Behavior<BackstageTabControl>
     {
-        private IPageService _pageService;
+        private IRegionManager _regionManager;
 
-        public BackstageTabNavigationBehavior()
+        public void Initialize(IRegionManager regionManager)
         {
-        }
-
-        public void Initialize(IPageService pageService)
-        {
-            _pageService = pageService;
+            _regionManager = regionManager;
         }
 
         protected override void OnAttached()
@@ -40,26 +33,16 @@ namespace RibbonApp.Behaviors
         {
             if (e.AddedItems.Count > 0 && e.AddedItems[0] is BackstageTabItem tabItem)
             {
-                var frame = new Frame()
+                var viewName = tabItem.Tag as string;
+                if (tabItem.Content == null)
                 {
-                    Focusable = false,
-                    NavigationUIVisibility = NavigationUIVisibility.Hidden
-                };
-                frame.Navigated += OnNavigated;
-                tabItem.Content = frame;
-                var page = _pageService.GetPage(tabItem.Tag as string);
-                frame.Navigate(page);
-            }
-        }
-
-        private void OnNavigated(object sender, NavigationEventArgs e)
-        {
-            if (e.Content is FrameworkElement element)
-            {
-                if (element.DataContext is INavigationAware navigationAware)
-                {
-                    navigationAware.OnNavigatedTo(e.ExtraData);
+                    var contentControl = new ContentControl();
+                    tabItem.Content = contentControl;
+                    RegionManager.SetRegionName(contentControl, viewName);
+                    RegionManager.SetRegionManager(contentControl, _regionManager);
                 }
+
+                _regionManager.RequestNavigate(viewName, viewName);
             }
         }
     }

@@ -3,17 +3,17 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Input;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Regions;
 
 using RibbonApp.Contracts.Services;
-using RibbonApp.Contracts.ViewModels;
 using RibbonApp.Models;
 
 namespace RibbonApp.ViewModels
 {
     // TODO WTS: Change the URL for your privacy policy in the appsettings.json file, currently set to https://YourPrivacyUrlGoesHere
-    public class SettingsViewModel : ViewModelBase, INavigationAware
+    public class SettingsViewModel : BindableBase, INavigationAware
     {
         private readonly AppConfig _config;
         private readonly IThemeSelectorService _themeSelectorService;
@@ -26,18 +26,18 @@ namespace RibbonApp.ViewModels
         public AppTheme Theme
         {
             get { return _theme; }
-            set { Set(ref _theme, value); }
+            set { SetProperty(ref _theme, value); }
         }
 
         public string VersionDescription
         {
             get { return _versionDescription; }
-            set { Set(ref _versionDescription, value); }
+            set { SetProperty(ref _versionDescription, value); }
         }
 
-        public ICommand SetThemeCommand => _setThemeCommand ?? (_setThemeCommand = new RelayCommand<string>(OnSetTheme));
+        public ICommand SetThemeCommand => _setThemeCommand ?? (_setThemeCommand = new DelegateCommand<string>(OnSetTheme));
 
-        public ICommand PrivacyStatementCommand => _privacyStatementCommand ?? (_privacyStatementCommand = new RelayCommand(OnPrivacyStatement));
+        public ICommand PrivacyStatementCommand => _privacyStatementCommand ?? (_privacyStatementCommand = new DelegateCommand(OnPrivacyStatement));
 
         public SettingsViewModel(AppConfig config, IThemeSelectorService themeSelectorService, ISystemService systemService)
         {
@@ -46,13 +46,13 @@ namespace RibbonApp.ViewModels
             _systemService = systemService;
         }
 
-        public void OnNavigatedTo(object parameter)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
             VersionDescription = GetVersionDescription();
             Theme = _themeSelectorService.GetCurrentTheme();
         }
 
-        public void OnNavigatedFrom()
+        public void OnNavigatedFrom(NavigationContext navigationContext)
         {
         }
 
@@ -72,5 +72,8 @@ namespace RibbonApp.ViewModels
 
         private void OnPrivacyStatement()
             => _systemService.OpenInWebBrowser(_config.PrivacyStatement);
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+            => true;
     }
 }

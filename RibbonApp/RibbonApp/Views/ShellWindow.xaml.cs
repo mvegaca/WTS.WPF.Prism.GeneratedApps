@@ -1,19 +1,17 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 
 using Fluent;
 
 using MahApps.Metro.Controls;
 
-using RibbonApp.Behaviors;
+using Prism.Regions;
+
+using RibbonApp.Constants;
 using RibbonApp.Contracts.Services;
-using RibbonApp.Contracts.Views;
-using RibbonApp.ViewModels;
 
 namespace RibbonApp.Views
 {
-    public partial class ShellWindow : MetroWindow, IShellWindow, IRibbonWindow
+    public partial class ShellWindow : MetroWindow, IRibbonWindow
     {
         public RibbonTitleBar TitleBar
         {
@@ -25,29 +23,15 @@ namespace RibbonApp.Views
 
         public static readonly DependencyProperty TitleBarProperty = TitleBarPropertyKey.DependencyProperty;
 
-        public ShellWindow(IPageService pageService)
+        public ShellWindow(IRegionManager regionManager, IRightPaneService rightPaneService)
         {
             InitializeComponent();
-            navigationBehavior.Initialize(pageService);
+            RegionManager.SetRegionName(menuContentControl, Regions.Main);
+            RegionManager.SetRegionManager(menuContentControl, regionManager);
+            rightPaneService.Initialize(splitView, rightPaneContentControl);
+            navigationBehavior.Initialize(regionManager);
+            tabsBehavior.Initialize(regionManager);
         }
-
-        public Frame GetNavigationFrame()
-            => shellFrame;
-
-        public RibbonTabsBehavior GetRibbonTabsBehavior()
-            => tabsBehavior;
-
-        public Frame GetRightPaneFrame()
-            => rightPaneFrame;
-
-        public SplitView GetSplitView()
-            => splitView;
-
-        public void ShowWindow()
-            => Show();
-
-        public void CloseWindow()
-            => Close();
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {

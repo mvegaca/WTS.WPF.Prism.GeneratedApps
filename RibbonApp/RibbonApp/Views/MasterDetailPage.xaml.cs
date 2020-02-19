@@ -2,7 +2,7 @@
 
 namespace RibbonApp.Views
 {
-    public partial class MasterDetailPage : Page
+    public partial class MasterDetailPage : UserControl
     {
         public MasterDetailPage()
         {

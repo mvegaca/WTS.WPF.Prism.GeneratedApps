@@ -8,14 +8,20 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:strings="clr-namespace:RibbonApp.Strings"
     xmlns:behaviors="clr-namespace:RibbonApp.Behaviors"
+    xmlns:prism="http://prismlibrary.com/"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     xmlns:Fluent="urn:fluent-ribbon"
     ShowSystemMenuOnRightClick="False"
     Loaded="MetroWindow_Loaded"
     Unloaded="MetroWindow_Unloaded"
     Style="{StaticResource CustomMetroWindow}"
-    DataContext="{Binding ShellViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d"
     Title="{x:Static strings:Resources.AppDisplayName}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <controls:MetroWindow.TitleTemplate>
         <DataTemplate>
             <Fluent:RibbonTitleBar
@@ -39,7 +45,7 @@
                                 <behaviors:BackstageTabNavigationBehavior x:Name="navigationBehavior" />
                             </i:Interaction.Behaviors>
                             <Fluent:BackstageTabItem
-                                Tag="RibbonApp.ViewModels.SettingsViewModel"
+                                Tag="Settings"
                                 Header="{x:Static strings:Resources.ShellPageRibbonBackstageTabSettingsHeader}" />
                         </Fluent:BackstageTabControl>
                     </Fluent:Backstage>
@@ -73,19 +79,16 @@
                 OpenPaneLength="400"
                 Focusable="False">
                 <controls:SplitView.Pane>
-                    <Frame
-                        x:Name="rightPaneFrame"
-                        Focusable="False"
-                        NavigationUIVisibility="Hidden"
-                        Background="{DynamicResource MahApps.Brushes.Control.Background}"
-                        BorderBrush="{DynamicResource MahApps.Brushes.Controls.Border}"
-                        BorderThickness="1,1,0,0" />
+                    <Border
+                        BorderThickness="1,1,0,0"
+                        BorderBrush="{DynamicResource MahApps.Brushes.Controls.Border}">
+                        <ContentControl
+                            x:Name="rightPaneContentControl" />
+                    </Border>
                 </controls:SplitView.Pane>
                 <controls:SplitView.Content>
-                    <Frame
-                        x:Name="shellFrame"
-                        Focusable="False"
-                        NavigationUIVisibility="Hidden" />
+                    <ContentControl
+                        x:Name="menuContentControl" />
                 </controls:SplitView.Content>
             </controls:SplitView>
         </Grid>
