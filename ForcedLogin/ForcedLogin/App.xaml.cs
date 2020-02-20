@@ -62,7 +62,6 @@ namespace ForcedLogin
             }
 
             base.OnInitialized();
-            await Task.CompletedTask;
         }
 
         private void OnLoggedIn(object sender, EventArgs e)
