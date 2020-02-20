@@ -86,6 +86,7 @@ namespace ForcedLogin.ViewModels
 
         private void OnUnloaded()
         {
+            _regionManager.Regions.Remove(Regions.Main);
             _navigationService.Navigated -= OnNavigated;
             _userDataService.UserDataUpdated -= OnUserDataUpdated;
         }

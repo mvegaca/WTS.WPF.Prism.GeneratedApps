@@ -21,8 +21,6 @@ namespace ForcedLogin.ViewModels
         private readonly IUserDataService _userDataService;
         private readonly IIdentityService _identityService;
         private readonly IThemeSelectorService _themeSelectorService;
-        private readonly IRegionManager _regionManager;
-        private readonly IRegionNavigationService _navigationService;
         private readonly ISystemService _systemService;
         private AppTheme _theme;
         private string _versionDescription;
@@ -55,15 +53,13 @@ namespace ForcedLogin.ViewModels
 
         public ICommand LogOutCommand => _logOutCommand ?? (_logOutCommand = new DelegateCommand(OnLogOut));
 
-        public SettingsViewModel(AppConfig config, IThemeSelectorService themeSelectorService, ISystemService systemService, IUserDataService userDataService, IIdentityService identityService, IRegionManager regionManager)
+        public SettingsViewModel(AppConfig config, IThemeSelectorService themeSelectorService, ISystemService systemService, IUserDataService userDataService, IIdentityService identityService)
         {
             _config = config;
             _themeSelectorService = themeSelectorService;
             _systemService = systemService;
             _userDataService = userDataService;
             _identityService = identityService;
-            _regionManager = regionManager;
-            _navigationService = _regionManager.Regions[Regions.Main].NavigationService;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -119,8 +115,6 @@ namespace ForcedLogin.ViewModels
         private void OnLoggedOut(object sender, EventArgs e)
         {
             UnregisterEvents();
-            _navigationService.RequestNavigate(PageKeys.Main);
-            _navigationService.Journal.Clear();
         }
     }
 }
