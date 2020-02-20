@@ -67,9 +67,14 @@ namespace ForcedLogin
 
         private void OnLoggedIn(object sender, EventArgs e)
         {
-            Application.Current.MainWindow = CreateShell();
+            if (!(Application.Current.MainWindow is ShellWindow))
+            {
+                Application.Current.MainWindow = CreateShell();
+            }
+
             Application.Current.MainWindow.Show();
             _logInWindow.Close();
+
         }
 
         private void OnLoggedOut(object sender, EventArgs e)
