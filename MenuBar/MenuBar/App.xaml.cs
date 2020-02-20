@@ -34,30 +34,25 @@ namespace MenuBar
         protected override Window CreateShell()
             => Container.Resolve<ShellWindow>();
 
-        protected async override void InitializeShell(Window shell)
+        protected override async void OnInitialized()
         {
-            base.InitializeShell(shell);
             var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
             persistAndRestoreService.RestoreData();
-            await Task.CompletedTask;
+
             var themeSelectorService = Container.Resolve<IThemeSelectorService>();
             themeSelectorService.SetTheme();
-        }
 
-        public async override void Initialize()
-        {
-            base.Initialize();
+            base.OnInitialized();
             await Task.CompletedTask;
         }
 
-        protected async override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             _startUpArgs = e.Args;
             base.OnStartup(e);
-            await Task.CompletedTask;
         }
 
-        protected async override void RegisterTypes(IContainerRegistry containerRegistry)
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Core Services
             containerRegistry.Register<IFileService, FileService>();
@@ -85,8 +80,6 @@ namespace MenuBar
             // Register configurations to IoC
             containerRegistry.RegisterInstance<IConfiguration>(configuration);
             containerRegistry.RegisterInstance<AppConfig>(appConfig);
-
-            await Task.CompletedTask;
         }
 
         private IConfiguration BuildConfiguration()
@@ -99,9 +92,8 @@ namespace MenuBar
                 .Build();
         }
 
-        private async void OnExit(object sender, ExitEventArgs e)
+        private void OnExit(object sender, ExitEventArgs e)
         {
-            await Task.CompletedTask;
             var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
             persistAndRestoreService.PersistData();
         }

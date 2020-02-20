@@ -37,26 +37,32 @@ namespace ForcedLogin
         protected override Window CreateShell()
             => Container.Resolve<ShellWindow>();
 
-        protected async override void InitializeShell(Window shell)
+        protected override async void OnInitialized()
         {
-            base.InitializeShell(shell);
             var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
             persistAndRestoreService.RestoreData();
-            await Task.CompletedTask;
+
             var themeSelectorService = Container.Resolve<IThemeSelectorService>();
             themeSelectorService.SetTheme();
+
             var userDataService = Container.Resolve<IUserDataService>();
             userDataService.Initialize();
-            var identityService = Container.Resolve<IIdentityService>();
+
             var config = Container.Resolve<AppConfig>();
+            var identityService = Container.Resolve<IIdentityService>();
             identityService.InitializeWithAadAndPersonalMsAccounts(config.IdentityClientId, "http://localhost");
             identityService.LoggedIn += OnLoggedIn;
             identityService.LoggedOut += OnLoggedOut;
+
             var silentLoginSuccess = await identityService.AcquireTokenSilentAsync();
             if (!silentLoginSuccess || !identityService.IsAuthorized())
             {
                 ShowLogInWindow();
+                return;
             }
+
+            base.OnInitialized();
+            await Task.CompletedTask;
         }
 
         private void OnLoggedIn(object sender, EventArgs e)
@@ -91,20 +97,13 @@ namespace ForcedLogin
             }
         }
 
-        public async override void Initialize()
-        {
-            base.Initialize();
-            await Task.CompletedTask;
-        }
-
-        protected async override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             _startUpArgs = e.Args;
             base.OnStartup(e);
-            await Task.CompletedTask;
         }
 
-        protected async override void RegisterTypes(IContainerRegistry containerRegistry)
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Core Services
             containerRegistry.Register<IMicrosoftGraphService, MicrosoftGraphService>();
@@ -142,8 +141,6 @@ namespace ForcedLogin
             // Register configurations to IoC
             containerRegistry.RegisterInstance<IConfiguration>(configuration);
             containerRegistry.RegisterInstance<AppConfig>(appConfig);
-
-            await Task.CompletedTask;
         }
 
         private IConfiguration BuildConfiguration()
@@ -156,9 +153,8 @@ namespace ForcedLogin
                 .Build();
         }
 
-        private async void OnExit(object sender, ExitEventArgs e)
+        private void OnExit(object sender, ExitEventArgs e)
         {
-            await Task.CompletedTask;
             var persistAndRestoreService = Container.Resolve<IPersistAndRestoreService>();
             persistAndRestoreService.PersistData();
         }
