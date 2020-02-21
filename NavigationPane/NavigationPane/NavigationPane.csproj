@@ -35,7 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NavigationPane.Core\NavigationPane.Core.csproj">
-      <Project>{a0f61ad3-45f0-4626-90ff-8f7ecaf73d5b}</Project>
+      <Project>{379bc5c8-f7df-447b-aa75-bd7461ab1115}</Project>
       <Name>NavigationPane.Core</Name>
     </ProjectReference>
   </ItemGroup>

@@ -17,8 +17,8 @@ namespace MenuBar.ViewModels
     // https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/WPF/projectTypes/menubar.md
     public class ShellViewModel : BindableBase
     {
-        private readonly IRightPaneService _rightPaneService;
         private readonly IRegionManager _regionManager;
+        private readonly IRightPaneService _rightPaneService;
         private IRegionNavigationService _navigationService;
         private DelegateCommand _goBackCommand;
         private ICommand _menuFileSettingsCommand;
@@ -60,6 +60,8 @@ namespace MenuBar.ViewModels
         private void OnUnloaded()
         {
             _navigationService.Navigated -= OnNavigated;
+            _regionManager.Regions.Remove(Regions.Main);
+            _rightPaneService.CleanUp();
         }
 
         private bool CanGoBack()

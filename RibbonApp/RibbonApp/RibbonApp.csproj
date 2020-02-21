@@ -36,7 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RibbonApp.Core\RibbonApp.Core.csproj">
-      <Project>{520b3888-7517-4d33-b183-cc49f56adde4}</Project>
+      <Project>{b07575da-d011-4dc7-8fde-792b528ea44c}</Project>
       <Name>RibbonApp.Core</Name>
     </ProjectReference>
   </ItemGroup>

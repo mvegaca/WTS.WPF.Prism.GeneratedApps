@@ -38,6 +38,11 @@ namespace RibbonApp.Behaviors
                 {
                     var contentControl = new ContentControl();
                     tabItem.Content = contentControl;
+                    if (_regionManager.Regions.ContainsRegionWithName(viewName))
+                    {
+                        _regionManager.Regions.Remove(viewName);
+                    }
+
                     RegionManager.SetRegionName(contentControl, viewName);
                     RegionManager.SetRegionManager(contentControl, _regionManager);
                 }

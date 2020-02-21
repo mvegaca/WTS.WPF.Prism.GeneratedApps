@@ -50,7 +50,7 @@
   </PropertyGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
-    <ProjectGuid>EF7D66BB-B4AC-4867-814E-2DB979068211</ProjectGuid>
+    <ProjectGuid>B849B0F9-46B0-48B5-AEDB-670A60A5D3B6</ProjectGuid>
     <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>

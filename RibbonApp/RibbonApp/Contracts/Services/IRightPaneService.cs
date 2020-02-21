@@ -16,5 +16,7 @@ namespace RibbonApp.Contracts.Services
         void OpenInRightPane(string pageKey, NavigationParameters navigationParameters = null);
 
         void Initialize(SplitView splitView, ContentControl rightPaneContentControl);
+
+        void CleanUp();
     }
 }

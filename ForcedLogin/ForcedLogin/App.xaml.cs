@@ -70,11 +70,11 @@ namespace ForcedLogin
             if (!(Application.Current.MainWindow is ShellWindow))
             {
                 Application.Current.MainWindow = CreateShell();
+                RegionManager.UpdateRegions();
             }
 
             Application.Current.MainWindow.Show();
             _logInWindow.Close();
-
         }
 
         private void OnLoggedOut(object sender, EventArgs e)
